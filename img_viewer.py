@@ -1,6 +1,12 @@
 # img_viewer.py
 
-import PySimpleGUIQt as sg
+# Prefer the Qt version of the library because it can handle more image types
+# If it doesn't exist, default back to the standard PSG library
+try:
+    import PySimpleGUIQt as sg
+except:
+    import PySimpleGUI as sg
+
 import os.path
 
 # The Qt version of the library can handle more file types than the 'normal'
