@@ -27,7 +27,7 @@ game_places = {'Forest':{'Story':'You are in a forest.',
                         'North':'Forest', 'South':'Cavern', 'East':'Garden'},
               'Castle':{'Story':'You have found a castle.\nNobody comes out to greet you.',
                         'North':'Troll Bridge', 'South':'Forest', 'West':'Fort'},
-              'Troll Bridge':{'Story':'You make your way across the bridge.\nIt is very scary. There is no way forward.\nAt least there is no troll.',
+              'Troll Bridge':{'Story':'You make your way across the bridge.\nIt is very scary. There is nothing on the other side.\nAt least there is no troll.',
                         'South':'Castle'},
               'Fort':{'Story':'You enter an abandoned Fort.\nIt is very quiet.',
                         'North':'Mountains', 'South':'Giant Bungalo', 'East':'Castle'},
@@ -141,9 +141,8 @@ def make_a_window():
     clue_col = sg.Column([clue],element_justification='r')
     exit_col = sg.Column([exit_button],element_justification='r')
     
-    layout = [[sg.Image(key="-IMAGE-", filename='game_Start.gif', size=(64,64)),
-                sg.Text(show_current_place(),size=(100,4), font='Any 14', key='-OUTPUT-'),
-                ],
+    layout = [[sg.Image(key="-IMAGE-", filename='', size=(64,64)),
+                sg.Text(show_current_place(),size=(100,4), font='Any 14', key='-OUTPUT-'),],
                 [clue_col],
                 [command_col],
                 [exit_col]]
@@ -152,10 +151,7 @@ def make_a_window():
     
 
 if __name__ == "__main__":
-    #testing for now
-    # print(show_current_place())
-    # current_story = game_play('North')
-    # print(show_current_place())
+
     directions = ('North', 'South', 'East', 'West')
     
     # A persisent window - stays until "Exit" is pressed
@@ -165,10 +161,11 @@ if __name__ == "__main__":
         # Text that appears on each button: bt = Button Text
         bt1, bt2, bt3 = '', '', ''
         # Flags to indicate if the button is visible: bv = Button Visable
+        # We only show buttons that have options on them
         bv1, bv2, bv3 = False, False, False
         # What will be the result of each button: br = Button Result
+        # A result being the name of the 'place' the button will take you
         br1, br2, br3 = '', '', ''
-        # We only show buttons that have options on them
         c = len(choices)
         if c > 1:
             bt1 = choices[1]
@@ -196,6 +193,7 @@ if __name__ == "__main__":
         window['-B3-'].update(visible=bv3)
         
         # If a button is for a direction, then say what is in that direction
+        # Non directional buttons produce no clue
         clue = ''
         if bt1 in directions :
             a = articleize(br1)
@@ -210,6 +208,7 @@ if __name__ == "__main__":
 
         event, values = window.read()
 
+        # Proxess button presses
         if event == '-B1-': 
             current_story = game_play(bt1)
         elif event == '-B2-':
