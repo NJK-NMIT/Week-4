@@ -31,7 +31,7 @@ game_places = {'Forest':{'Story':'You are in a forest.',
                         'South':'Castle'},
               'Fort':{'Story':'You enter an abandoned Fort.\nIt is very quiet.',
                         'North':'Mountains', 'South':'Giant Bungalo', 'East':'Castle'},
-              'Mountains':{'Story':'As you make your way through the mountains\n  you are kidnapped by the militatnt branch of the\n  Salvation Army.',
+              'Mountains':{'Story':'As you make your way through the mountains\n  you are kidnapped by the militant branch of the\n  Salvation Army.',
                         'Pay ransom':'Pay', 'Refuse to pay':'Refuse'},
               'Pay':{'Story':'You pay a random of 100 gold coins.\nYou are released back the way you came.',
                         'Continue':'Fort'},
@@ -105,17 +105,24 @@ def game_play(direction):
         
 def articleize(word):
     """
-    Give the correct article (a or an) for a given word
+    Give the correct article (a, an or some) for a given word
 
     Args:
         word string: The word to be articalised
 
     Returns:
-        string: "a" or "an"
+        string: "a" or "an" or "some"
+
+    Exceptions:
+        If called with no argument, an empty string is returned
     """
-    if word[0].lower() in ('a', 'e', 'i', 'o', 'u'):
+    if not word :
+        article = ''
+    elif word[len(word)-1].lower() == 's' :
+        article = 'some'
+    elif word[0].lower() in ('a', 'e', 'i', 'o', 'u') :
         article = 'an'
-    else:
+    else :
         article = 'a'
     return(article)
         
