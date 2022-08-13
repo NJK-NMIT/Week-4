@@ -105,7 +105,7 @@ def game_play(direction):
         
 def articleize(word):
     """
-    Give the correct article (a, an or some) for a given word
+    Give the correct (indefinite) article (a, an or some) for a given word
 
     Args:
         word string: The word to be articalised
@@ -152,12 +152,15 @@ def make_a_window():
 
 if __name__ == "__main__":
 
+    # The options that indicate an option is actually a direction
+    # Directions are the only options that will give a clue as to what that option will do
     directions = ('North', 'South', 'East', 'West')
     
     # A persisent window - stays until "Exit" is pressed
     window = make_a_window()
+    
     while True:
-        choices = list( game_places[game_state].keys() )
+
         # Text that appears on each button: bt = Button Text
         bt1, bt2, bt3 = '', '', ''
         # Flags to indicate if the button is visible: bv = Button Visable
@@ -166,6 +169,9 @@ if __name__ == "__main__":
         # What will be the result of each button: br = Button Result
         # A result being the name of the 'place' the button will take you
         br1, br2, br3 = '', '', ''
+
+        # Get the options for the current place in the game
+        choices = list( game_places[game_state].keys() )
         c = len(choices)
         if c > 1:
             bt1 = choices[1]
@@ -208,7 +214,7 @@ if __name__ == "__main__":
 
         event, values = window.read()
 
-        # Proxess button presses
+        # Process button presses
         if event == '-B1-': 
             current_story = game_play(bt1)
         elif event == '-B2-':
