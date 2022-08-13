@@ -17,8 +17,10 @@ game_places = {'Forest':{'Story':'You are in the forest.',
                         'West':'Village'},
               'Garden':{'Story':'You are at the Garden of Sorrow.\nIt is not a happy place.',
                         'North':'Village', 'West':'Cave', 'South':'Wizzard Tower'},
-              'Wizzard Tower':{'Story':'You enter the Wizzard Tower.\nThe Wizzard is not happy!\nHe lifts his wand..',
-                        'Panic!':'Game Over'},
+              'Wizzard Tower':{'Story':'You enter the Wizzzard Tower.\nThe Wizzzard is not happy!\nHe lifts his wand...',
+                        'Get zapped':'Sleep'},
+              'Sleep':{'Story':'You are zapped by the Wizzzard\'s wand.\nYou fall asleep.',
+                        'Wake up':'Garden'},                        
               'Cave':{'Story':'You are at the cave.\nIt is a bit chilly.',
                         'North':'Forest', 'South':'Cavern', 'East':'Garden'},
               'Castle':{'Story':'You have found a castle.\nNobody comes out to greet you.',
@@ -26,7 +28,13 @@ game_places = {'Forest':{'Story':'You are in the forest.',
               'Troll Bridge':{'Story':'You make your way across the bridge.\nIt is very scary.\nThere is no way forward.',
                         'South':'Castle'},
               'Fort':{'Story':'You enter an abandoned Fort.\nIt is very quiet.',
-                        'East':'Castle', 'South':'Giant Bungalo'},
+                        'North':'Mountains', 'South':'Giant Bungalo', 'East':'Castle'},
+              'Mountains':{'Story':'As you make your way through the mountains\n  you are kidnapped by the militatnt branch of the\n  Salvation Army.',
+                        'Pay ransom':'Pay', 'Refuse to pay':'Refuse'},
+              'Pay':{'Story':'You are released back the way you came.',
+                        'Continue':'Fort'},
+              'Refuse':{'Story':'The Salvation Army doesn\'t take kindly to those\n  who refuse their demands.\nYou are stabbed and left to die.',
+                        },                      
               'Giant Bungalo':{'Story':'You enter a bungalo that was clearly made for giants.\nYou feel out of place.',
                         'North':'Fort', 'South':'Gremlin Hole'},
               'Gremlin Hole':{'Story':'It is obvious that gremlins once lived here.\nPizza boxes litter the floor.',
@@ -35,7 +43,7 @@ game_places = {'Forest':{'Story':'You are in the forest.',
                         'North':'Gremlin Hole', 'East':'Cavern', 'Check in':'Check in Death'},
               'Cavern':{'Story':'You stumble into a cavern.\nThe floor is quite slippery.',
                         'West':'Ogre Hotel', 'South':'Grotto'},
-              'Grotto':{'Story':'This grotto exudes the class and sophistication\nof a Kardashian bowel movement.\nThere is no turning back!',
+              'Grotto':{'Story':'This grotto exudes the class and sophistication\n  of a Kardashian bowel movement.\nThere is no turning back now!',
                         'East':'Lair'},
               'Lair':{'Story':'You have encountered a monster!',
                         'Panic!':'Game Over','Say Hello':'Gain XP'},
@@ -47,8 +55,6 @@ game_places = {'Forest':{'Story':'You are in the forest.',
                         'Panic!':'Game Over'},
 
                 }
-
-directions = ('North', 'South', 'East', 'West')
 
 def show_current_place():
     """Gets the story at the game_state place
@@ -79,6 +85,21 @@ def game_play(direction):
         game_state = proposed_state
         return game_places[game_state]['Story']
         
+def articleize(word):
+    """
+    Give the correct article (a or an) for a given word
+
+    Args:
+        word string: The word to be articalised
+
+    Returns:
+        string: "a" or "an"
+    """
+    if word[0].lower() in ('a', 'e', 'i', 'o', 'u'):
+        article = 'an'
+    else:
+        article = 'a'
+    return(article)
         
 def make_a_window():
     """
@@ -110,6 +131,7 @@ if __name__ == "__main__":
     # print(show_current_place())
     # current_story = game_play('North')
     # print(show_current_place())
+    directions = ('North', 'South', 'East', 'West')
     
     # A persisent window - stays until "Exit" is pressed
     window = make_a_window()
@@ -121,7 +143,7 @@ if __name__ == "__main__":
         bv1, bv2, bv3 = False, False, False
         # What will be the result of each button: br = Button Result
         br1, br2, br3 = '', '', ''
-        # How many choices (buttons) do we have.  Note that "Story" is an uncounted item
+        # We only show buttons that have options on them
         c = len(choices)
         if c > 1:
             bt1 = choices[1]
@@ -146,18 +168,21 @@ if __name__ == "__main__":
         window['-B2-'].update(visible=bv2)
         window['-B3-'].update(visible=bv3)
         
+        # If a button is for a direction, then say what is in that direction
         clue = ''
         if bt1 in directions :
-            clue += f"The path {bt1} leads to a {br1}\n"
+            a = articleize(br1)
+            clue += f"The path {bt1} leads to {a} {br1}\n"
         if bt2 in directions :
-            clue += f"The path {bt2} leads to a {br2}\n"
+            a = articleize(br2)
+            clue += f"The path {bt2} leads to {a} {br2}\n"
         if bt3 in directions :
-            clue += f"The path {bt3} leads to a {br3}"
+            a = articleize(br3)
+            clue += f"The path {bt3} leads to {a} {br3}"
         window['-CLUES-'].update(clue)
 
         event, values = window.read()
 
-        print("Event", event)
         if event == '-B1-': 
             current_story = game_play(bt1)
         elif event == '-B2-':
