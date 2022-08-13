@@ -6,6 +6,8 @@ A comment describing the game module
 """
 from ast import Delete
 import PySimpleGUI as sg
+import os.path
+
 
 # Brief comment about how the following lines work
 game_state = 'Forest'
@@ -44,7 +46,7 @@ game_places = {'Forest':{'Story':'You are in a forest.',
               'Check in':{'Story':'You and the Ogre can\'t understand each other.\nYou also have no money to pay for a room.\nYou are now sad.',
                         'North':'Gremlin Hole', 'East':'Cavern'},
               'Cavern':{'Story':'You stumble into a cavern.\nThe floor is quite slippery.',
-                        'South':'Grotto', 'West':'Ogre Hotel'},
+                        'North':'Cave', 'South':'Grotto', 'West':'Ogre Hotel'},
               'Grotto':{'Story':'This grotto exudes the class and sophistication\n  of a Kardashian bowel movement.\nThere is no turning back now!',
                         'East':'Lair'},
               'Lair':{'Story':'You have encountered a monster!',
@@ -67,6 +69,20 @@ def show_current_place():
     global game_state
     
     return game_places[game_state]['Story']
+
+def get_current_image():
+    """Gets the image at the game_state place, if it exists
+
+    Returns:
+        string: the filename of the image at the current place.  If one is not found, returns the default image (game_Start.gif)
+    """
+    global game_state
+    filename = f"game_{game_state}.gif"
+    if os.path.exists(filename) == True:
+        return filename
+    else :
+        return 'game_Start.gif'
+
 
 def game_play(direction):
     """
@@ -118,7 +134,7 @@ def make_a_window():
     clue_col = sg.Column([clue],element_justification='r')
     exit_col = sg.Column([exit_button],element_justification='r')
     
-    layout = [[sg.Text('Story:', size=(7,1), font='Any 14'),
+    layout = [[sg.Image(key="-IMAGE-", filename='game_Start.gif', size=(64,64)),
                 sg.Text(show_current_place(),size=(100,4), font='Any 14', key='-OUTPUT-'),
                 ],
                 [clue_col],
@@ -160,7 +176,9 @@ if __name__ == "__main__":
             bv3 = True
             br3 = game_places[game_state][bt3]
         
-        #print(f'==={game_state}', choices, b1, b2, b3, c, br1, br2, br3)
+        # Update the image for the current location
+        window['-IMAGE-'].update(get_current_image())
+
         # Update the text on each button
         window['-B1-'].update(bt1)
         window['-B2-'].update(bt2)
